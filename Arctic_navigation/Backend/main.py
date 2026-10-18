@@ -24,12 +24,12 @@ app.add_middleware(
 )
 
 # Replace this with your actual OpenWeather API Key
-OPENWEATHER_API_KEY = ""
+OPENWEATHER_API_KEY = "17d1849df01bb168a74f963e12235c00"
 
 # Load the ML model
 try:
     # Ensure the model file is in the same directory as main.py
-    model = joblib.load('arctic_master_v3.pkl')
+    model = joblib.load('arctic_master_final_model_v3.pkl')
     print("Success: 'arctic_master_v3.pkl' loaded successfully.")
 except Exception as e:
     model = None
