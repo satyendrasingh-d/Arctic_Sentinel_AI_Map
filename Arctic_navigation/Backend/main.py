@@ -255,7 +255,7 @@ def get_admin_logs():
 @app.get("/")
 def serve_main_dashboard():
     # Serves the main user interface
-    file_path = os.path.join("frontend", "index.html")
+    file_path = os.path.join("Frontend", "index.html")
     if os.path.exists(file_path):
         return FileResponse(file_path)
     return {"error": "index.html not found. Please create the frontend folder."}
