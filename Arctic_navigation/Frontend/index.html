@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arctic Sentinel AI</title>
+    
+    <!-- FontAwesome for UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts for Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet.js CSS for the Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Link to our Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-mountain-sun logo-icon"></i>
+                <div>
+                    <h1 class="logo-title">Arctic Sentinel AI</h1>
+                    <p class="logo-subtitle">AI-Powered Safer Route Intelligence</p>
+                </div>
+            </div>
+
+            <!-- Simplified Navigation Menu -->
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Map View</a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-circle-info"></i> About</a>
+            </nav>
+
+            <!-- Interactive Hologram Section at the Bottom -->
+            <div class="hologram-section">
+                <div class="hologram-graphic">
+                    <!-- The CSS will add the glowing mountain effect here -->
+                    <div class="mountain-hologram"></div>
+                </div>
+                <p class="hologram-text">Protecting Arctic Communities with AI</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Header Tagline -->
+            <header class="top-header">
+                <div class="header-tagline">
+                    <span>Smarter Routes</span> <span class="divider">|</span> 
+                    <span>Safer Journeys</span> <span class="divider">|</span> 
+                    <span>A Sustainable Arctic</span>
+                    <i class="fa-regular fa-snowflake snowflake-icon"></i>
+                </div>
+            </header>
+
+            <!-- Dashboard Grid Layout -->
+            <div class="dashboard-content">
+                
+                <!-- Top Row: Input, Examples, and Risk Assessment -->
+                <div class="top-row">
+                    
+                    <!-- Route Input Card (Text based locations) -->
+                    <div class="card input-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-location-dot"></i> Route Input</h2>
+                        </div>
+                        <p class="card-desc">Enter locations to analyze the route</p>
+                        
+                        <div class="input-group">
+                            <label for="start-location">Start Location</label>
+                            <input type="text" id="start-location" placeholder="e.g. Yakutsk" autocomplete="off">
+                        </div>
+                        <div class="input-group">
+                            <label for="end-location">End Destination</label>
+                            <input type="text" id="end-location" placeholder="e.g. Magadan" autocomplete="off">
+                        </div>
+                        <button id="analyze-btn" class="primary-btn">
+                            <i class="fa-solid fa-magnifying-glass"></i> Analyze Route
+                        </button>
+                    </div>
+
+                    <!-- Quick Examples Card -->
+                    <div class="card examples-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-bolt"></i> Quick Examples</h2>
+                        </div>
+                        <p class="card-desc">Try these sample locations:</p>
+                        <ul class="example-list">
+                            <li onclick="fillExample('Yakutsk', 'Magadan')"><i class="fa-solid fa-location-crosshairs"></i> Yakutsk to Magadan</li>
+                            <li onclick="fillExample('Tromsø', 'Svalbard')"><i class="fa-solid fa-location-crosshairs"></i> Tromsø to Svalbard</li>
+                            <li onclick="fillExample('Murmansk', 'Norilsk')"><i class="fa-solid fa-location-crosshairs"></i> Murmansk to Norilsk</li>
+                        </ul>
+                    </div>
+
+                    <!-- Risk Assessment Display Card -->
+                    <div class="card assessment-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-shield-halved"></i> Risk Assessment</h2>
+                        </div>
+                        
+                        <!-- Dynamic Alert Box -->
+                        <div id="risk-alert" class="risk-alert neutral-risk">
+                            <i id="risk-icon" class="fa-solid fa-circle-question"></i>
+                            <span id="risk-text-display">AWAITING INPUT</span>
+                        </div>
+
+                        <div class="risk-probability">
+                            <p>Max Risk Probability</p>
+                            <h1 id="risk-percentage">--%</h1>
+                            <!-- Progress Bar Container -->
+                            <div class="progress-bar-container">
+                                <div id="risk-progress" class="progress-bar"></div>
+                            </div>
+                        </div>
+
+                        <!-- Route Information Details -->
+                        <div class="assessment-details">
+                            <div class="detail-row"><span>Start</span> <span id="lbl-start">--</span></div>
+                            <div class="detail-row"><span>End</span> <span id="lbl-end">--</span></div>
+                            <div class="detail-row"><span>Category</span> <span id="lbl-category">--</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: The Interactive Route Map -->
+                <div class="map-row">
+                    <div class="card map-card">
+                        <div class="card-header map-header">
+                            <h2><i class="fa-solid fa-map"></i> Arctic Route Risk Map</h2>
+                            <div class="map-controls">
+                                <button class="map-btn active">Map</button>
+                                <button class="map-btn">Satellite</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Leaflet Map Container -->
+                        <div id="map-container"></div>
+                        
+                        <!-- New Custom Risk Legend -->
+                        <div class="map-legend">
+                            <span class="legend-item"><span class="dot low"></span> Low Risk (0-35%)</span>
+                            <span class="legend-item"><span class="dot medium"></span> Medium Risk (36-55%)</span>
+                            <span class="legend-item"><span class="dot high"></span> High Risk (56-100%)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS for Map Functionality -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Link to our Custom JavaScript logic -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,519 @@
+
+/* =========================================
+   ARCTIC SENTINEL AI - GLOBAL STYLES & VARIABLES
+   ========================================= */
+
+:root {
+    /* Core Color Palette matching the provided UI */
+    --bg-dark: #0b1121;           /* Main background color */
+    --card-bg: #151e32;           /* Card background color */
+    --card-border: #1e293b;       /* Subtle border for cards */
+    --text-main: #f8fafc;         /* Primary white text */
+    --text-muted: #94a3b8;        /* Secondary grayish text */
+    --accent-blue: #2563eb;       /* Primary interactive blue */
+    --accent-blue-hover: #1d4ed8; /* Darker blue for hover states */
+    
+    /* Risk Category Colors */
+    --risk-high: #ef4444;         /* Red for 56-100% */
+    --risk-medium: #eab308;       /* Yellow for 36-55% */
+    --risk-low: #22c55e;          /* Green for 0-35% */
+    
+    /* Glow Effects */
+    --glow-blue: rgba(37, 99, 235, 0.3);
+    --glow-hologram: rgba(56, 189, 248, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* =========================================
+   LAYOUT STRUCTURE
+   ========================================= */
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================
+   SIDEBAR & NAVIGATION
+   ========================================= */
+
+.sidebar {
+    width: 260px;
+    background-color: var(--card-bg);
+    border-right: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 20px 30px 20px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.logo-icon {
+    font-size: 28px;
+    color: var(--accent-blue);
+    text-shadow: 0 0 10px var(--glow-blue);
+}
+
+.logo-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.logo-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    padding: 0 12px;
+    flex-grow: 1; /* Pushes the hologram section to the bottom */
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-muted);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+}
+
+.nav-item.active {
+    background-color: var(--accent-blue);
+    color: white;
+    box-shadow: 0 4px 15px var(--glow-blue);
+}
+
+/* =========================================
+   BOTTOM HOLOGRAM EFFECT
+   ========================================= */
+
+.hologram-section {
+    padding: 20px;
+    text-align: center;
+    margin-top: auto;
+    position: relative;
+}
+
+.hologram-graphic {
+    width: 100px;
+    height: 60px;
+    margin: 0 auto 15px auto;
+    position: relative;
+    border-bottom: 2px solid #38bdf8;
+    box-shadow: 0 10px 20px -10px var(--glow-hologram);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+/* Pure CSS Glowing Mountain */
+.mountain-hologram {
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 50px solid rgba(56, 189, 248, 0.2);
+    position: relative;
+    filter: drop-shadow(0 0 8px var(--glow-hologram));
+    animation: hologram-flicker 3s infinite alternate;
+}
+
+.mountain-hologram::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -15px;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 30px solid rgba(255, 255, 255, 0.4);
+}
+
+@keyframes hologram-flicker {
+    0% { opacity: 0.8; filter: drop-shadow(0 0 5px var(--glow-hologram)); }
+    100% { opacity: 1; filter: drop-shadow(0 0 15px var(--glow-hologram)); }
+}
+
+.hologram-text {
+    font-size: 13px;
+    color: #38bdf8;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   MAIN CONTENT AREA
+   ========================================= */
+
+.main-content {
+    flex-grow: 1;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--card-border);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.header-tagline {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.divider {
+    color: #334155;
+}
+
+.snowflake-icon {
+    color: #38bdf8;
+    margin-left: 10px;
+    font-size: 16px;
+    animation: spin-slow 10s linear infinite;
+}
+
+@keyframes spin-slow {
+    100% { transform: rotate(360deg); }
+}
+
+/* =========================================
+   DASHBOARD GRID & CARDS
+   ========================================= */
+
+.dashboard-content {
+    padding: 24px 30px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.top-row {
+    display: flex;
+    gap: 24px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.card-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+/* Sizes for Top Row Cards */
+.input-card { flex: 1; }
+.examples-card { flex: 1; }
+.assessment-card { flex: 1.2; }
+
+/* =========================================
+   INPUT FORM STYLES
+   ========================================= */
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    background-color: var(--bg-dark);
+    border: 1px solid #334155;
+    color: var(--text-main);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--accent-blue);
+}
+
+.primary-btn {
+    width: 100%;
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.primary-btn:hover {
+    background-color: var(--accent-blue-hover);
+}
+
+/* =========================================
+   QUICK EXAMPLES LIST
+   ========================================= */
+
+.example-list {
+    list-style: none;
+}
+
+.example-list li {
+    padding: 12px;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+}
+
+.example-list li i {
+    color: var(--text-muted);
+}
+
+.example-list li:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-muted);
+}
+
+/* =========================================
+   RISK ASSESSMENT STYLES
+   ========================================= */
+
+.risk-alert {
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.neutral-risk { background-color: #1e293b; color: var(--text-muted); border: 1px solid #334155; }
+.high-risk { background-color: rgba(239, 68, 68, 0.15); color: var(--risk-high); border: 1px solid rgba(239, 68, 68, 0.3); }
+.medium-risk { background-color: rgba(234, 179, 8, 0.15); color: var(--risk-medium); border: 1px solid rgba(234, 179, 8, 0.3); }
+.low-risk { background-color: rgba(34, 197, 94, 0.15); color: var(--risk-low); border: 1px solid rgba(34, 197, 94, 0.3); }
+
+.risk-probability p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.risk-probability h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 12px;
+    background-color: #1e293b;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #334155;
+    transition: width 1s ease-in-out, background-color 0.5s;
+}
+
+.assessment-details .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #1e293b;
+    font-size: 13px;
+}
+
+.assessment-details .detail-row:last-child {
+    border-bottom: none;
+}
+
+.assessment-details .detail-row span:first-child {
+    color: var(--text-muted);
+}
+
+.assessment-details .detail-row span:last-child {
+    font-weight: 500;
+}
+
+/* =========================================
+   MAP SECTION
+   ========================================= */
+
+.map-row {
+    flex-grow: 1;
+    display: flex;
+}
+
+.map-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0; /* Remove padding to make map flush with edges */
+    overflow: hidden;
+}
+
+.map-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-bg);
+    z-index: 10;
+}
+
+.map-header h2 { margin: 0; }
+
+.map-controls {
+    display: flex;
+    background-color: var(--bg-dark);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #334155;
+}
+
+.map-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.map-btn.active {
+    background-color: #334155;
+    color: white;
+}
+
+#map-container {
+    height: 450px;
+    width: 100%;
+    background-color: #0b1121; /* Fallback color before tiles load */
+    z-index: 1; /* Keep leaflet controls below header */
+}
+
+/* Custom styles for Leaflet dark mode map */
+.leaflet-container {
+    background: #0b1121 !important;
+}
+
+/* Legend over the map */
+.map-legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgba(21, 30, 50, 0.9);
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    z-index: 1000; /* Above leaflet map */
+    display: flex;
+    gap: 15px;
+    backdrop-filter: blur(5px);
+}
+
+.legend-item {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-main);
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot.low { background-color: var(--risk-low); }
+.dot.medium { background-color: var(--risk-medium); }
+.dot.high { background-color: var(--risk-high); }
