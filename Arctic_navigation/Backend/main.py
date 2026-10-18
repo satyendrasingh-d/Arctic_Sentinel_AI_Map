@@ -263,7 +263,40 @@ def serve_main_dashboard():
 @app.get("/admin-panel")
 def serve_hidden_admin_panel():
     # Serves the hidden admin dashboard
-    file_path = os.path.join("frontend", "admin.html")
+    file_path = os.path.join("Frontend", "admin.html")
     if os.path.exists(file_path):
         return FileResponse(file_path)
     return {"error": "admin.html not found."}
+
+
+# HTML ROUTING (Serving Frontend Files)
+
+@app.get("/")
+def serve_main_dashboard():
+    # Serves the main user interface
+    file_path = os.path.join("Frontend", "index.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"error": "index.html not found. Please create the frontend folder."}
+
+@app.get("/admin-panel")
+def serve_hidden_admin_panel():
+    # Serves the hidden admin dashboard
+    file_path = os.path.join("Frontend", "admin.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"error": "admin.html not found."}
+
+@app.get("/style.css")
+def serve_css():
+    file_path = os.path.join("Frontend", "style.css")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"error": "style.css not found."}
+
+@app.get("/script.js")
+def serve_js():
+    file_path = os.path.join("Frontend", "script.js")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"error": "script.js not found."}
