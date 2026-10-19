@@ -170,9 +170,13 @@ function updateDashboard(data) {
 }
 
 // ==========================================
+// ==========================================
 // PLOT ROUTE & POINTS ON LEAFLET MAP
 // ==========================================
 function plotRouteOnMap(data) {
+    // SAVE DATA FOR FULL SCREEN MAP VIEW (Ye line nayi add hui hai)
+    localStorage.setItem('latestRouteData', JSON.stringify(data));
+
     // Clear previous results
     routeLayer.clearLayers();
     pointsLayer.clearLayers();
