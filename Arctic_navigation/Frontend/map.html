@@ -38,7 +38,7 @@
     
     <script>
         // Initialize Map
-        const map = L.map('full-screen-map').setView([20.5937, 78.9629], 5); // Default to India initially
+        const map = L.map('full-screen-map').setView([20.5937, 78.9629], 5);
 
         // Load Free OpenStreetMap Tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -46,19 +46,54 @@
             maxZoom: 19
         }).addTo(map);
 
-        // Live Location Tracking Logic
+        // Helper function for risk colors
+        function getRiskStyle(percentage) {
+            if (percentage >= 56) return { color: "#ef4444", name: "High Risk" }; // Red
+            else if (percentage >= 36) return { color: "#eab308", name: "Medium Risk" }; // Yellow
+            else return { color: "#22c55e", name: "Low Risk" }; // Green
+        }
+
+        // =====================================
+        // 1. DRAW SAVED ROUTE FROM DASHBOARD
+        // =====================================
+        const savedData = localStorage.getItem('latestRouteData');
+        
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            
+            // Draw continuous line
+            const routeLatLngs = data.full_route.map(coord => [coord[1], coord[0]]);
+            const polyline = L.polyline(routeLatLngs, { color: '#3b82f6', weight: 5, opacity: 0.8 }).addTo(map);
+
+            // Draw Risk Points
+            data.analyzed_points.forEach(point => {
+                const styleInfo = getRiskStyle(point.risk_percentage);
+                const circle = L.circleMarker([point.lat, point.lon], {
+                    radius: 6, fillColor: styleInfo.color, color: "#ffffff", weight: 1.5, opacity: 1, fillOpacity: 0.9
+                });
+                circle.bindTooltip(`<b>Risk:</b> ${point.risk_percentage}%<br><b>Zone:</b> ${styleInfo.name}`);
+                circle.addTo(map);
+            });
+
+            // Start and End Markers
+            L.marker([data.start_coords[1], data.start_coords[0]]).bindPopup("<b>Start</b>").addTo(map);
+            L.marker([data.end_coords[1], data.end_coords[0]]).bindPopup("<b>End</b>").addTo(map);
+
+            // Zoom map to show the whole route
+            map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+        }
+
+        // =====================================
+        // 2. LIVE DEVICE LOCATION (BLUE DOT)
+        // =====================================
         if (navigator.geolocation) {
-            // Design for glowing blue dot
             const blueDotIcon = L.divIcon({
                 className: 'live-location-dot',
                 html: `<div style="width: 16px; height: 16px; background-color: #2563eb; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 15px #2563eb;"></div>`,
-                iconSize: [22, 22],
-                iconAnchor: [11, 11]
+                iconSize: [22, 22], iconAnchor: [11, 11]
             });
 
             let userMarker;
-            let firstZoomDone = false;
-
             navigator.geolocation.watchPosition(
                 (position) => {
                     const lat = position.coords.latitude;
@@ -70,11 +105,10 @@
                         userMarker = L.marker([lat, lng], { icon: blueDotIcon, zIndexOffset: 1000 }).addTo(map);
                         userMarker.bindPopup("<b>Your Live Location</b>").openPopup();
                     }
-
-                    // Auto zoom to user location only the first time it loads
-                    if (!firstZoomDone) {
-                        map.setView([lat, lng], 16); // 16 is a close-up street level zoom
-                        firstZoomDone = true;
+                    
+                    // If no route was searched, zoom to user location
+                    if (!savedData) {
+                        map.setView([lat, lng], 14); 
                     }
                 },
                 (error) => { console.warn("Location error:", error.message); },
@@ -83,6 +117,3 @@
         } else {
             alert("Geolocation is not supported by your browser.");
         }
-    </script>
-</body>
-</html>
