@@ -300,3 +300,12 @@ def serve_js():
     if os.path.exists(file_path):
         return FileResponse(file_path)
     return {"error": "script.js not found."}
+
+
+@app.get("/map-view")
+def serve_full_map():
+    # Serves the full-screen live map page
+    file_path = os.path.join("Frontend", "map.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"error": "map.html not found. Please create it in the Frontend folder."}
