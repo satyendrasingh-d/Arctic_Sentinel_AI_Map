@@ -91,6 +91,7 @@ function getRiskStyle(percentage) {
 }
 
 // ==========================================
+// ==========================================
 // MAIN API CALL & UI UPDATE
 // ==========================================
 async function handleRouteAnalysis() {
@@ -108,8 +109,8 @@ async function handleRouteAnalysis() {
     btn.disabled = true;
 
     try {
-        // Call the FastAPI Backend (Ensure backend is running on this address)
-        const response = await fetch("http://127.0.0.1:8000/api/analyze", {
+        // Call the FastAPI Backend using relative path for Render
+        const response = await fetch("/api/analyze", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -137,7 +138,6 @@ async function handleRouteAnalysis() {
         btn.disabled = false;
     }
 }
-
 // ==========================================
 // UPDATE DASHBOARD UI
 // ==========================================
