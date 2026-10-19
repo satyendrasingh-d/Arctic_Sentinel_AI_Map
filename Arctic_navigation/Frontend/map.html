@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +37,7 @@
     
     <script>
         // Initialize Map
-        const map = L.map('full-screen-map').setView([20.5937, 78.9629], 5);
+        const map = L.map('full-screen-map').setView([20.5937, 78.9629], 5); // Default to India initially
 
         // Load Free OpenStreetMap Tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -59,28 +58,32 @@
         const savedData = localStorage.getItem('latestRouteData');
         
         if (savedData) {
-            const data = JSON.parse(savedData);
-            
-            // Draw continuous line
-            const routeLatLngs = data.full_route.map(coord => [coord[1], coord[0]]);
-            const polyline = L.polyline(routeLatLngs, { color: '#3b82f6', weight: 5, opacity: 0.8 }).addTo(map);
+            try {
+                const data = JSON.parse(savedData);
+                
+                // Draw continuous line
+                const routeLatLngs = data.full_route.map(coord => [coord[1], coord[0]]);
+                const polyline = L.polyline(routeLatLngs, { color: '#3b82f6', weight: 5, opacity: 0.8 }).addTo(map);
 
-            // Draw Risk Points
-            data.analyzed_points.forEach(point => {
-                const styleInfo = getRiskStyle(point.risk_percentage);
-                const circle = L.circleMarker([point.lat, point.lon], {
-                    radius: 6, fillColor: styleInfo.color, color: "#ffffff", weight: 1.5, opacity: 1, fillOpacity: 0.9
+                // Draw Risk Points
+                data.analyzed_points.forEach(point => {
+                    const styleInfo = getRiskStyle(point.risk_percentage);
+                    const circle = L.circleMarker([point.lat, point.lon], {
+                        radius: 6, fillColor: styleInfo.color, color: "#ffffff", weight: 1.5, opacity: 1, fillOpacity: 0.9
+                    });
+                    circle.bindTooltip(`<b>Risk:</b> ${point.risk_percentage}%<br><b>Zone:</b> ${styleInfo.name}`);
+                    circle.addTo(map);
                 });
-                circle.bindTooltip(`<b>Risk:</b> ${point.risk_percentage}%<br><b>Zone:</b> ${styleInfo.name}`);
-                circle.addTo(map);
-            });
 
-            // Start and End Markers
-            L.marker([data.start_coords[1], data.start_coords[0]]).bindPopup("<b>Start</b>").addTo(map);
-            L.marker([data.end_coords[1], data.end_coords[0]]).bindPopup("<b>End</b>").addTo(map);
+                // Start and End Markers
+                L.marker([data.start_coords[1], data.start_coords[0]]).bindPopup("<b>Start</b>").addTo(map);
+                L.marker([data.end_coords[1], data.end_coords[0]]).bindPopup("<b>End</b>").addTo(map);
 
-            // Zoom map to show the whole route
-            map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+                // Zoom map to show the whole route
+                map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+            } catch (error) {
+                console.error("Route draw error:", error);
+            }
         }
 
         // =====================================
@@ -115,5 +118,8 @@
                 { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
             );
         } else {
-            alert("Geolocation is not supported by your browser.");
+            console.warn("Geolocation is not supported by your browser.");
         }
+    </script>
+</body>
+</html>
