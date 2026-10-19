@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Map View - Arctic Sentinel</title>
+    
+    <!-- Leaflet CSS & FontAwesome -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Inter', sans-serif; }
+        #full-screen-map { height: 100vh; width: 100vw; }
+        
+        /* Back Button Design */
+        .back-btn { 
+            position: absolute; top: 15px; left: 50px; z-index: 1000; 
+            padding: 10px 20px; background-color: #0f172a; color: white; 
+            text-decoration: none; border-radius: 8px; font-weight: bold; 
+            border: 1px solid #334155; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+        .back-btn:hover { background-color: #2563eb; }
+    </style>
+</head>
+<body>
+
+    <!-- Button to go back to main dashboard -->
+    <a href="/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    
+    <!-- Full Screen Map Container -->
+    <div id="full-screen-map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Initialize Map
+        const map = L.map('full-screen-map').setView([20.5937, 78.9629], 5); // Default to India initially
+
+        // Load Free OpenStreetMap Tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Live Location Tracking Logic
+        if (navigator.geolocation) {
+            // Design for glowing blue dot
+            const blueDotIcon = L.divIcon({
+                className: 'live-location-dot',
+                html: `<div style="width: 16px; height: 16px; background-color: #2563eb; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 15px #2563eb;"></div>`,
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
+            });
+
+            let userMarker;
+            let firstZoomDone = false;
+
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    if (userMarker) {
+                        userMarker.setLatLng([lat, lng]);
+                    } else {
+                        userMarker = L.marker([lat, lng], { icon: blueDotIcon, zIndexOffset: 1000 }).addTo(map);
+                        userMarker.bindPopup("<b>Your Live Location</b>").openPopup();
+                    }
+
+                    // Auto zoom to user location only the first time it loads
+                    if (!firstZoomDone) {
+                        map.setView([lat, lng], 16); // 16 is a close-up street level zoom
+                        firstZoomDone = true;
+                    }
+                },
+                (error) => { console.warn("Location error:", error.message); },
+                { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    </script>
+</body>
+</html>
