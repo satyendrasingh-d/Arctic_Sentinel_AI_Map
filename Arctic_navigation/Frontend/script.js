@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize Leaflet Map centered on an Arctic region
     map = L.map('map-container').setView([70.0, 20.0], 4);
 
-    // Use a dark-themed map tile (CartoDB Dark Matter) to match the UI
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors & CartoDB',
+    // Use standard OpenStreetMap tiles (100% Free, No API Key needed)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 19
     }).addTo(map);
 
