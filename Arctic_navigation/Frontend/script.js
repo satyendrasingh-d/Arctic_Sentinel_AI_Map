@@ -139,36 +139,47 @@ async function handleRouteAnalysis() {
     }
 }
 // ==========================================
-// UPDATE DASHBOARD UI
+// UPDATE DASHBOARD UI (AVERAGE RISK LOGIC)
 // ==========================================
 function updateDashboard(data) {
-    const riskPct = data.overall_max_risk;
-    const styleInfo = getRiskStyle(riskPct);
+    
+    let totalRisk = 0;
+    data.analyzed_points.forEach(point => {
+        totalRisk += point.risk_percentage;
+    });
+    const avgRiskPct = Math.round(totalRisk / data.analyzed_points.length);
 
-    // Update the Large Alert Box
+    // 2. Average Risk ke hisaab se color aur style nikalna
+    const styleInfo = getRiskStyle(avgRiskPct);
+
+    // 3. Average ke hisaab se nayi category set karna
+    let avgCategory = "LOW RISK";
+    if (avgRiskPct >= 56) avgCategory = "HIGH RISK";
+    else if (avgRiskPct >= 36) avgCategory = "MEDIUM RISK";
+
+    // 4. Update the Large Alert Box
     const alertBox = document.getElementById("risk-alert");
     const riskIcon = document.getElementById("risk-icon");
     const riskText = document.getElementById("risk-text-display");
     
     alertBox.className = `risk-alert ${styleInfo.alertClass}`;
     riskIcon.className = `fa-solid ${styleInfo.icon}`;
-    riskText.textContent = data.overall_category.toUpperCase();
+    riskText.textContent = avgCategory;
 
-    // Update Percentage and Progress Bar
-    document.getElementById("risk-percentage").textContent = `${riskPct}%`;
+    // 5. Update Percentage and Progress Bar
+    document.getElementById("risk-percentage").textContent = `${avgRiskPct}%`;
     const progressBar = document.getElementById("risk-progress");
-    progressBar.style.width = `${riskPct}%`;
+    progressBar.style.width = `${avgRiskPct}%`;
     progressBar.style.backgroundColor = styleInfo.color;
 
-    // Update Details Rows
+    // 6. Update Details Rows
     document.getElementById("lbl-start").textContent = document.getElementById("start-location").value;
     document.getElementById("lbl-end").textContent = document.getElementById("end-location").value;
     
     const categorySpan = document.getElementById("lbl-category");
-    categorySpan.textContent = data.overall_category;
+    categorySpan.textContent = avgCategory;
     categorySpan.style.color = styleInfo.color;
 }
-
 // ==========================================
 // ==========================================
 // PLOT ROUTE & POINTS ON LEAFLET MAP
