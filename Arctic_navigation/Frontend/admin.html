@@ -231,7 +231,7 @@
             try {
                 // Assuming the backend is running on localhost for now
                 // Change this URL if deploying to Render/Vercel
-                const response = await fetch('http://127.0.0.1:8000/api/admin/logs');
+                const response = await fetch('/api/admin/logs');
                 const data = await response.json();
                 
                 if (data.status === "success") {
